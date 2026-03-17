@@ -1,0 +1,7 @@
+build/
+sim_*
+*.vcd
+__pycache__/
+sim_build/
+results.xml
+CLAUDE_CODE_INSTRUCTIONS_MMU.md

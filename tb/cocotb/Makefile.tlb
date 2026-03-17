@@ -1,0 +1,8 @@
+SIM ?= icarus
+TOPLEVEL_LANG ?= verilog
+VERILOG_SOURCES = $(PWD)/../../rtl/mmu_pkg.sv $(PWD)/../../rtl/lru_tracker.sv $(PWD)/../../rtl/tlb.sv
+TOPLEVEL = tlb
+MODULE = test_tlb
+COMPILE_ARGS = -g2012 -Ptlb.NUM_ENTRIES=4
+
+include $(shell cocotb-config --makefiles)/Makefile.sim
