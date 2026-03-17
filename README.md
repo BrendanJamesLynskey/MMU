@@ -2,6 +2,17 @@
 
 Synthesisable SystemVerilog implementation of an Sv32 Memory Management Unit for RISC-V processors. Features a fully-associative TLB with true LRU replacement, a hardware page table walker, permission checking per the RISC-V Privileged Specification, and SFENCE.VMA support.
 
+**Why "Sv32"?** The name comes from the RISC-V Privileged Specification: **S**upervisor **v**irtual memory, **32**-bit virtual address space. The "S" indicates the scheme is managed by S-mode (the supervisor/kernel privilege level), "v" stands for virtual memory, and the number gives the width of the virtual address. RISC-V defines a family of paging schemes following this convention:
+
+| Scheme | Page Table Levels | Virtual Address Width | Target |
+|--------|-------------------|-----------------------|--------|
+| **Sv32** | 2 | 32-bit (4 GiB) | RV32 |
+| Sv39 | 3 | 39-bit (512 GiB) | RV64 general purpose |
+| Sv48 | 4 | 48-bit (256 TiB) | RV64 large memory |
+| Sv57 | 5 | 57-bit (128 PiB) | RV64 future |
+
+Sv32 is the only paging mode available on 32-bit RISC-V (RV32). Each step up to Sv39/48/57 adds one page table level and is exclusive to RV64. This project implements Sv32 — the simplest scheme, and the natural fit for 32-bit cores like the BRV32 and BRV32P in this repository family.
+
 Brendan Lynskey 2025
 
 ## What Is a Memory Management Unit?
@@ -30,7 +41,7 @@ The microprocessor era initially did without MMUs. Early chips like the Intel 80
 
 RISC architectures took a different path. MIPS and SPARC used software-managed TLBs — the hardware detected a TLB miss, but the OS handled the page table walk in a trap handler. This simplified the hardware but added interrupt latency on every miss. ARM and later RISC-V returned to hardware-walked page tables, recognising that the performance cost of software TLB refill was too high for modern memory access patterns.
 
-The RISC-V Privileged Specification defines Sv32 (two-level, 32-bit virtual address), Sv39 (three-level, 39-bit), and Sv48 (four-level, 48-bit) as standardised page table formats. Sv32, implemented in this project, is the simplest and targets RV32 systems — embedded processors, microcontrollers, and educational cores where a 4 GiB virtual address space is sufficient.
+Sv32 — the two-level, 32-bit virtual address scheme described above — is the simplest of the RISC-V paging modes and the only one available on RV32. It targets embedded processors, microcontrollers, and educational cores where a 4 GiB virtual address space is sufficient.
 
 ### Security Role
 
